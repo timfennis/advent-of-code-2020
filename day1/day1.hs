@@ -1,21 +1,29 @@
 import Data.List
 
-main = do
-    text <- readFile "input"
+day1 = do
+    text <- readFile "day1/input"
     let numbers = parseNumbers text
-    print $ solve $ subsequencesOfSize 2 numbers
-    print $ solve $ subsequencesOfSize 3 numbers
+    putStrLn $ "Part 1: " ++ (show $ solvePartOne numbers)
+    putStrLn $ "Part 2: " ++ (show $ solvePartTwo numbers)
 
-solve :: [[Int]] -> Int
-solve xs = head $ filter (/=0) $ map (solvePair 2020) xs
-
-solvePair :: Int -> [Int] -> Int
-solvePair s xs
-    | (sum xs) == s = product xs
-    | otherwise = 0
-
+-- Convert the input String to [Int]
 parseNumbers :: String -> [Int]
 parseNumbers input = map read (lines input)
+
+-- Part 1 and part 2 of the puzzle
+solvePartOne = solve 2020 2
+solvePartTwo = solve 2020 3
+
+-- Generate all combinations of size `k` in list `xs`
+-- Find the first set where the sum of all elements is `t` and calculates
+solve :: Int -> Int -> [Int] -> Int
+solve t k xs = head $ filter (/=0) $ map (solveGroup t) (subsequencesOfSize k xs)
+
+-- Checks if the sum of xs equals s, if true it returns the product of xs, if false it returns 0
+solveGroup :: Int -> [Int] -> Int
+solveGroup s xs
+    | (sum xs) == s = product xs
+    | otherwise = 0
 
 -- Deze code is vet hard genakt van stackoverflow
 subsequencesOfSize :: Int -> [a] -> [[a]]
