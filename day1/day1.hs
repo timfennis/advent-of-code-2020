@@ -17,7 +17,10 @@ solvePartTwo = solve 2020 3
 -- Generate all combinations of size `k` in list `xs`
 -- Find the first set where the sum of all elements is `t` and calculates
 solve :: Int -> Int -> [Int] -> Int
-solve t k xs = head $ filter (/=0) $ map (solveGroup t) (subsequencesOfSize k xs)
+solve t k xs = head solutions
+    where 
+        solutions  = filter (/=0) candidates
+        candidates = map (solveGroup t) (subsequencesOfSize k xs)
 
 -- Checks if the sum of xs equals s, if true it returns the product of xs, if false it returns 0
 solveGroup :: Int -> [Int] -> Int
