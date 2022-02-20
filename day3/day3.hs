@@ -38,4 +38,3 @@ solve trees slope = length (positions `intersect` trees)
         maxX = maximum $ map fst trees
         maxY = maximum $ map snd trees
         positions = foldl (\c _ -> (clip maxX $ slope `applySlope` (head c)) : c) [(0,0)] [0..maxY]
-        

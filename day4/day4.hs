@@ -4,8 +4,6 @@ import qualified Data.Set as S
 import Data.List (intersect, isSuffixOf, isPrefixOf)
 import Data.Set (Set)
 import Data.Char (isAlpha)
-import Control.Monad
-import Control.Monad.Reader
 
 day4 = do 
     text <- readFile "day4/input"
@@ -20,7 +18,7 @@ solve1 :: [Passport] -> Int
 solve1 passports = length $ filter hasRequiredFields passports
 
 solve2 :: [Passport] -> Int
-solve2 passports = length $ filter (liftM2 (&&) hasRequiredFields isValid) passports
+solve2 passports = length $ filter ((&&) <$> hasRequiredFields <*> isValid) passports
 
 requiredFields = S.fromList ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 validEyeColors = S.fromList ["amb","blu","brn","gry","grn","hzl","oth"]
@@ -47,7 +45,6 @@ isValid passport = (byr >= 1920 && byr <= 2002)
             && (isHex $ tail hcl)
             && (S.member ecl validEyeColors)
             && (length pid == 9 && isNumeric pid) 
-
     where
         byr = read $ passport M.! "byr" :: Int
         iyr = read $ passport M.! "iyr" :: Int
