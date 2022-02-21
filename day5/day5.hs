@@ -1,28 +1,23 @@
 import Data.List ((\\))
 
 day5 = do
-    text <- readFile "day5/input"
-    print $ maximum $ map (uniqueId . parseCode) $ parse text
-    print $ findSeat $ map (uniqueId . parseCode) $ parse text
+    text <- lines <$> readFile "day5/input"
+    putStrLn $ "Part one: " ++ (show $ maximum $ map (uniqueId . parseCode) text)
+    putStrLn $ "Part two: " ++ (show $ findSeat $ map (uniqueId . parseCode) text)
 
-parse = parse' ""
-
-parse' :: String -> String -> [String]
-parse' b [] = [b]
-parse' b (x:xs)
-    | x == '\n' = b : (parse' "" xs)
-    | otherwise = parse' (b ++ [x]) xs
-
+-- Convert a seat number to a unique id
+uniqueId :: (Int, Int) -> Int
 uniqueId (r,s) = r * 8 + s 
 
+parseCode :: String -> (Int, Int)
 parseCode s = (rowToInt (take 7 s), chairToInt (drop 7 s))
 
+-- Find the seat that is not assigned to anyone by calculating the difference between all seats and xs
 findSeat :: [Int] -> Int
-findSeat xs = head $ [min..max] \\ xs
-    where
-        min = minimum xs
-        max = maximum xs
-
+findSeat xs = let allSeats = [minimum xs..maximum xs]
+    in head $ allSeats \\ xs
+        
+-- Utilities for parsing strings of essentially binary code to integers
 rowToInt :: String -> Int
 rowToInt = stringToInt 'F' 'B'
 
